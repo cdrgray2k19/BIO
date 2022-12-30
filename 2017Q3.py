@@ -1,25 +1,47 @@
 from functools import lru_cache
-numOfParcels, max, numOfItems, weight = map(int, input().split())
-#number of parcels, number of parcel weights allowed 1-i, number of items in all parcels, weight of each parvel
-#number of ways to make up a parcel given a number of items and weight chosen is always max so that no combination can be repeated
-#then do function do find number of parcels and reference ways to make 1 less parcels * the number of ways to make the give parcel with the given number of items
-@lru_cache(maxsize=None)
-def items(numsOfItems, max, weight):
-    if numsOfItems == 0 and weight == 0:
-        return 1
-    if numOfItems <= 0 or weight <= 0:
-        return 0
-    return sum(
-        items(numsOfItems-1, i, weight-i) for i in range(1, max+1)
-    )
-@lru_cache(maxsize=None)
-def parcels(numOfParcels, max, numOfItems, weight):
-    if numOfParcels == 0 and numOfItems == 0:
-        return 1
-    if numOfParcels <= 0 or numOfItems <= 0:
-        return 0
-    return sum(
-        parcels(numOfParcels-1, max, numOfItems-i, weight)*items(i, max, weight) for i in range(1, numOfItems+1)
-    )
+p, i, n, w = map(int, input().split())
 
-print(parcels(numOfParcels, max, numOfItems, weight))
+
+#need to construct a function which figures out, given the number of items, and the weight of a single parcel, how many distinct parcels could be made
+#do this for each combination of p numbers adding up to n
+
+res = 0
+
+def splitPackets(n, p, packets):
+    if n < 0:
+        return 0
+    if p == 0 and n > 0:
+        return 0
+    if n == 0 and p == 0:
+        global w
+        global res
+        global i
+        total = 1
+        for packet in packets:
+            total *= packetComb(i, w, packet, 1)
+        res += total
+        return 1
+
+    total = 0
+    for items in range(1, n-p+2):
+        temp = packets.copy()
+        temp.append(items)
+        total += splitPackets(n-items, p-1, temp)
+    return total
+
+
+@lru_cache(maxsize=None)
+def packetComb(i, w, k, max):
+    if w < 0:
+        return 0
+    if k == 0 and w > 0:
+        return 0
+    if w == 0 and k == 0:
+        return 1
+    total = 0
+    for weight in range(max, i+1):
+        total += packetComb(i, w-weight, k-1, weight)
+    return total
+
+splitPackets(n, p, [])
+print(res)
