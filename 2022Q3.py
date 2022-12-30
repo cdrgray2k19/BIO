@@ -1,59 +1,44 @@
-from functools import lru_cache
-parked, n = input().split()
-n = int(n)
-letters = []
-for i in range(0, len(parked)):
-    letters.append(chr(65+i))
+res, num = input().split()
+num = int(num)
+res = list(map(lambda x:int(ord(x)-ord("a")), res))
+length = len(res)
 
-prefered = []
-seen = []
-for i in range(0, len(parked)):
-    if parked[i] == 'a':
-        prefered.append([chr(i+65)])
-        seen.append(chr(i+65))
-        break
-#now we know the first one
-
-for char in range(1, len(parked)):
-    for i in range(0, len(parked)):
-        if parked[i] == chr(ord('a')+char):
-            #found car we were looking for
-            arr = [chr(i+65)]
-            seen.append(chr(i+65))
-            for c in letters:
-                if c < chr(i+65) and c in seen:
-                    arr.append(c)
-            prefered.append(arr)
-
-#now just find combinations
-#need to sort each preferred so backtracking works
-
-for i in range(0, len(prefered)):
-    prefered[i] = sorted(prefered[i])
-
-print(prefered)
-
-@lru_cache(maxsize=None)
-def combinations(indexToStart):
-    if indexToStart == len(prefered):
+def findComb(res, next, length):
+    if next == length:
         return 1
-    
-    combs = 1
-    for i in range(indexToStart, len(prefered)):
-        combs *= len(prefered[i])
-    
-    return combs
+    positions = 0
+    ind = res.index(next)
+    positions += 1
+    for i in range(ind-1, -1, -1):
+        if res[i] < next:
+            positions += 1
+        else:
+            break
+    if positions == 0:
+        return 0
+    return positions*findComb(res, next+1, length)
 
-string = prefered[0][0]
-car = 1
-while len(string)<len(parked):
-    for i in range(0, len(prefered[car])):
-        arrange = combinations(car+1)
-        if arrange >= n:
-            string += prefered[car][i]
-            car += 1
+pref = []
+next = 0
+while len(pref) < len(res):
+    pos = set()
+    ind = res.index(next)
+    pos.add(ind)
+    for i in range(ind-1, -1, -1):
+        if res[i] < next:
+            pos.add(i)
+        else:
+            break
+    for new in pos:
+        target = num
+        temp = pref.copy()
+        temp.append(new)
+        target -= findComb(res, next+1, len(res))
+        if target <= 0:
+            pref.append(new)
             break
         else:
-            n -= arrange
+            num = target
+    next += 1
 
-print(string)
+print("".join(list(map(lambda x:chr(x+ord("A")),pref))))
