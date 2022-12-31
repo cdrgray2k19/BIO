@@ -1,4 +1,4 @@
-#dont need warehouse just need to convert letters to numbers and then get next one after shops max
+"""#dont need warehouse just need to convert letters to numbers and then get next one after shops max
 #reduces need for deepcopy and storing warehouses
 from functools import lru_cache
 from copy import deepcopy
@@ -74,4 +74,62 @@ def bfs(orders, depth):
 
     return bfs(new, depth+1)
 
-print(bfs([shop], 1))
+print(bfs([shop], 1))"""
+
+
+
+
+
+from collections import deque
+
+def add(s):
+    s.append(chr(len(s) + ord("A")))
+    return s
+
+def swap(s):
+    temp = s[0]
+    s[0] = s[1]
+    s[1] = temp
+    return s
+
+def rotate(s):
+    front = s.pop(0)
+    s.append(front)
+    return s
+
+
+target = tuple(input())
+
+q = deque()
+q.append(((), 0))
+visited = set()
+while q:
+    cur, dist = q.popleft()
+    
+    if cur == target:
+        print(dist)
+        break
+
+    if cur in visited:
+        continue
+
+    visited.add(cur)
+    cur = list(cur)
+
+    if len(cur) < len(target):
+        temp = cur.copy()
+        added = tuple(add(temp))
+        if added not in visited:
+            q.append((added, dist+1))
+
+    if len(cur) >= 2:
+        temp = cur.copy()
+        swapped = tuple(swap(temp))
+        if swapped not in visited:
+            q.append((swapped, dist+1))
+
+    if len(cur) >= 1:
+        temp = cur.copy()
+        rotated = tuple(rotate(temp))
+        if rotated not in visited:
+            q.append((rotated, dist+1))

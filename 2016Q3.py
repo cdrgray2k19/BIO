@@ -1,4 +1,4 @@
-l, p, q = map(int, input().split())
+"""l, p, q = map(int, input().split())
 def generatePrimes(l):
     b = [True] * l
     b[0] = False
@@ -31,4 +31,40 @@ def solve(arr, end, max, path):
                     visited.add(val + negChanges[i])
                     new.append(val + negChanges[i])
     return solve(new, end, max, path+1)
-print(solve([p], q, l, 1))
+print(solve([p], q, l, 1))"""
+
+
+#re attempt
+from collections import deque
+l, start, end = map(int, input().split())
+
+primes = [True] * l
+primes[0] = False
+primes[1] = False
+for i in range(2, l):
+    if primes[i]:
+        num = 2*i
+        while num < l:
+            primes[num] = False
+            num += i
+
+q = deque()
+visited = set()
+q.append((start, 1))
+while q:
+    cur, dist = q.popleft()
+    if cur == end:
+        print(dist)
+        break
+    if cur in visited:
+        continue
+    visited.add(cur)
+    for i in range(0, 24):
+        new1 = cur + 2**i
+        new2 = cur - 2**i
+        if new1 >= l and new2 < 2:
+            break
+        if new1 < l and primes[new1]:
+            q.append((new1, dist+1))
+        if new2 >= 2 and primes[new2]:
+            q.append((new2, dist+1))

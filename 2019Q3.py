@@ -58,3 +58,53 @@ else:
     if len(lowest) == 0:
         lowest = [None, None]
     print(solve(lowest[0], lowest[1], s))
+
+
+"""
+
+n, p = input().split()
+n = int(n)
+p = list(map(lambda x:ord(x)-ord("A"), p))
+
+
+def check(s):
+    highest = None
+    smallest = 100
+    for c in s:
+        smallest = min(smallest, c)
+        if highest == None:
+            if c > smallest:
+                highest = c
+        else:
+            if smallest < c < highest:
+                highest = c
+            if c > highest:
+                return False
+    return (smallest, highest)
+
+def solve(n, p, high):
+    if len(p) == n:
+        return 1
+    total = 0
+    if high == None:
+        high = n
+    for i in range(0, high):
+        if i not in p:
+            temp = p.copy()
+            temp.append(i)
+            res = check(temp)
+            if res != False:
+                tlow, thigh = res
+                total += solve(n, temp, thigh)
+
+            else:
+                print("oh no")
+    return total
+
+res = check(p)
+if res == False:
+    print(0)
+else:
+    low, high = res
+    print(solve(n,p,high))
+"""
