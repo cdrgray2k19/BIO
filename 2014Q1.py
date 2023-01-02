@@ -1,4 +1,7 @@
-"""l = []
+"""
+import time
+start = time.time()
+l = []
 arr = []
 n = int(input())
 for i in range(1, 2*n, 2):
@@ -16,13 +19,19 @@ while True:
         print(val2, val1)
         break
     x = 0
+
     while (x + num - 1) < len(arr):
         temp = x + num - 1
         arr.pop(temp)
         x = temp
     index += 1
 
+end = time.time()
+print(end-start)
+
 """
+import time
+start = time.time()
 n = int(input())
 odds = []
 for i in range(0, n):
@@ -46,17 +55,16 @@ while True:
         toPrint.append(num)
         break
 
-    ind = 0
-    div = 1
-    while True:
-        ind += 1
-        div += 1
-        if ind >= len(odds):
-            break
-        if div%num == 0:
-            odds.pop(ind)
-            ind -= 1
+    ind = -1
+    while ind+num < len(odds):
+        div = ind+num
+        odds.pop(div)
+        ind = div
+        ind -= 1
 
 for n in toPrint:
     print(str(n)+" ", end="")
 print("")
+end = time.time()
+print(end-start)
+#"""
