@@ -1,3 +1,4 @@
+"""
 #number of actors
 n = int(input())
 #number of scenes for each actor
@@ -30,3 +31,33 @@ def dfs(current):
 #most senior actor has to go first so no point checking for that
 current[0] = 1
 print(dfs(current))
+"""
+from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def DFS(actors):
+    actors = list(actors)
+    global scenes
+    if actors == scenes:
+        return 1
+    total = 0
+    for i in range(0, len(actors)):
+        if actors[i] < scenes[i]:
+            if i > 0:
+                if actors[i] == actors[i-1]:
+                    continue
+            temp = actors.copy()
+            temp[i] += 1
+            total += DFS(tuple(temp))
+
+
+    return total
+
+n = int(input())
+scenes = list(map(int, input().split()))
+actors = []
+for i in range(0, n):
+    actors.append(0)
+
+actors = tuple(actors)
+print(DFS(actors))
