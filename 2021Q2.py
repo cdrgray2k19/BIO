@@ -1,4 +1,4 @@
-#too complicated, didnt need to store triangle class can all be done in x,y plain
+"""#too complicated, didnt need to store triangle class can all be done in x,y plain
 
 from collections import defaultdict
 from copy import deepcopy
@@ -265,4 +265,96 @@ while position not in visited:
     visited.add(position)
     position = tuple(moveEdge(*list(position)))
     edges += 1
-print(edges)
+print(edges)"""
+
+
+#not finished
+
+m, p = map(int, input().split())
+
+grid = dict()
+grid[(0,0)] = 0
+
+players = []
+travs = input().split()
+for t in travs:
+    players.append(((0, 0, "L"), int(t), 0))
+
+topLeft = [0,0]
+m = 2
+curPlayer = 0
+while m > 0:
+    pos, trav, score = players[curPlayer]
+    x, y, dir = pos
+    #reposition if needed
+    #basically if side they are points to another triangle, then reposition to topLeft
+
+    #save start in order to fill at end
+    start = [x,y,dir]
+    while trav > 0:
+        #move here
+        if dir == "L":
+            if (x, y+1) in grid:
+                y += 1
+            elif (x+y)%2 == 0:
+                if (x+1, y) in grid:
+                    x += 1
+                    dir = "U"
+                else:
+                    dir = "R"
+            else:
+                dir = "U"
+        elif dir == "R":
+            if (x, y-1) in grid:
+                y -= 1
+            elif (x+y)%2 == 0:
+                dir = "D"
+            else:
+                if (x-1, y) in grid:
+                    x -= 1
+                    dir = "D"
+                else:
+                    dir = "L"
+        elif dir == "U":
+            if (x+1, y+1) in grid:
+                x += 1
+                y += 1
+            elif (x+2, y+1) in grid:
+                x += 2
+                y += 1
+                dir = "L"
+            elif (x+2, y) in grid:
+                x += 2
+            elif (x+1, y) in grid:
+                x += 1
+                dir = "R"
+            else:
+                dir = "R"
+        else:
+            if (x-1, y-1) in grid:
+                x -= 1
+                y -= 1
+                dir = "R"
+            elif (x-2, y-1) in grid:
+                x -= 2
+                y -= 1
+                dir = "R"
+            elif (x-2, y) in grid:
+                x -= 2
+            elif (x-1, y) in grid:
+                x -= 1
+                dir = "L"
+            else:
+                dir = "L"
+        trav -= 1
+        #check for point
+        if (x+y)%2 == 1:
+            #check left and right
+            if dir == "U":
+                pass
+
+
+    
+    m -= 1
+    curPlayer += 1
+    curPlayer %= len(players)
