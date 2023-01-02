@@ -1,4 +1,4 @@
-#dynamic programming
+"""#dynamic programming
 
 import math
 n = int(input())
@@ -18,3 +18,27 @@ for i in range(6, n+1):
         a, b = pair
         previous[i] = min(previous[i], previous[a]+previous[b])
 print(previous[n])
+"""
+import math
+
+def factors(n):
+    pairs = []
+    for i in range(2, round(math.sqrt(n)+1)):
+        if n%i == 0:
+            pairs.append((i, n//i))
+    return pairs
+n = int(input())
+DP = [0]*(n+1)
+index = 1
+while index < len(DP):
+    if index <= 3:
+
+        DP[index] = DP[index-1]+ 1
+    else:
+        ans = DP[index-1]+1
+        pairs = factors(index)
+        for f,s in pairs:
+            ans = min(ans, DP[f]+DP[s])
+        DP[index] = ans
+    index += 1
+print(DP[-1])
