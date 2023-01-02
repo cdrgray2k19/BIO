@@ -1,4 +1,4 @@
-#red = solid  and green = dashed
+"""#red = solid  and green = dashed
 # 6 different tiles
 #load in grid then for each player
 #for each square start search for a cycle, each square added to visited so cant backtrack or search for cycle when allready found, each cycle search keep score to add onto total for that player
@@ -86,4 +86,72 @@ if __name__ == '__main__':
     for _ in range(n):
         grid.append(list(map(int, input().split())))
     
-    print(*main(n, grid))
+    print(*main(n, grid))"""
+
+
+
+
+
+n = int(input())
+grid = []
+for _ in range(0, n):
+    grid.append(list(map(int, input().split())))
+
+#do one complete search for red
+#one complete search for green
+#start top right
+#follow connections, keeping track of visited
+#just have to work out connections myself
+
+#red connections then green
+tiles =[["UD", "LR"], ["LR", "UD"], ["LU", "DR"], ["UR", "LD"], ["DR", "LU"], ["LD", "UR"]]
+
+translate = {"L": (-1, 0), "R":(1, 0), "U":(0, -1), "D":(0, 1)}
+
+directions = ["U", "L", "D", "R"]
+
+def search(x, y, ind):
+    global grid
+    global tiles
+    global translate
+    global directions
+    last = ""
+    visited = set()
+    while True:
+        visited.add((x,y))
+        tileNum = grid[y][x]
+        dirs = tiles[tileNum-1][ind]
+        dir = ""
+        if last == "":
+            dir = dirs[0]
+        else:
+            if last not in dirs:
+                return False, visited
+            for d in dirs:
+                if d != last:
+                    dir = d
+                    break
+        dx,dy = translate[dir]
+        last = directions[(directions.index(dir)-2)%4]
+        x += dx
+        y += dy
+        if (x,y) in visited:
+            return True, visited
+        if not(0 <= x < len(grid) and 0 <= y < len(grid)):
+            return False, visited
+
+points = [0,0]
+for ind in [0,1]:
+    visited = set()
+    for y in range(0, n):
+        for x in range(0, n):
+            if (x,y) in visited:
+                continue
+            score, searched = search(x,y,ind)
+            visited.update(searched)
+            if score:
+                points[ind] += len(searched)
+
+for p in points:
+    print(str(p)+" ", end="")
+print("")
