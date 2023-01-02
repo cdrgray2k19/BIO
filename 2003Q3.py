@@ -1,4 +1,4 @@
-from functools import lru_cache
+"""from functools import lru_cache
 
 @lru_cache(maxsize=None)
 def factorial(n):
@@ -59,3 +59,51 @@ else:
             toPrint += ' '
         toPrint += string[i]
     print(toPrint)
+
+"""
+import math
+n, m = map(int, input().split())
+if m == 0:
+    assert False, "answer: 0"
+
+def comb(ones, zeros):
+   return int(math.factorial(ones+zeros)/(math.factorial(ones)*math.factorial(zeros)))
+#first get length
+zeros = 0
+while True:
+    combs = comb(m-1, zeros)
+    if combs < n:
+        n -= combs
+        zeros += 1
+    else:
+        break
+
+
+ones = m-1
+res = "1"
+while (ones+zeros)>0:
+    for num in [0,1]:
+        if num == 0:
+            if zeros == 0:
+                continue
+            zeros -= 1
+        elif num == 1:
+            if ones == 0:
+                continue
+            ones -= 1
+        combs = comb(ones, zeros)
+        if combs >= n:
+            res += str(num)
+            break
+        else:
+            n -= combs
+            if num == 0:
+                zeros += 1
+            else:
+                ones += 1
+res2 = ""
+for i in range(0, len(res)):
+    if i%6 == 0:
+        res2 += " "
+    res2 += res[i]
+print(res2[1:])
